@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node --loader ts-node/esm src/index.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint src/**/*.ts",
+    "format:check": "prettier --check .",
+    "build": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
