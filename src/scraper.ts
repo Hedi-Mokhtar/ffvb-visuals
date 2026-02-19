@@ -1,8 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-
-const CLUB_ID = "0593506";
-const BASE_URL = "https://www.ffvbbeach.org/ffvbapp/resu/planning_club.php";
+import { config } from "./config.js";
 
 export interface Match {
   competition: string;
@@ -68,7 +66,7 @@ export function parseMatches(html: string): Match[] {
 
 export async function fetchMatches(weekOffset: number): Promise<Match[]> {
   const timestamp = getWeekTimestamp(weekOffset);
-  const url = `${BASE_URL}?aff_semaine=PRE&date_jour=${timestamp}&cnclub=${CLUB_ID}`;
+  const url = `${config.baseUrl}?aff_semaine=PRE&date_jour=${timestamp}&cnclub=${config.clubId}`;
 
   const { data } = await axios.get(url, { responseType: "arraybuffer" });
   const decoded = new TextDecoder("iso-8859-1").decode(data);
