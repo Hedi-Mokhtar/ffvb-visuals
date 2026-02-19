@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getCategory, groupMatchesByCategory } from "./categorie.js";
+import { getCategory, groupMatchesByCategory } from "./categories.js";
 
 describe("getCategory", () => {
   it("identifie les compétitions séniors", () => {
