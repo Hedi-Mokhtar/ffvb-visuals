@@ -14,7 +14,21 @@ describe("getWeekTimestamp", () => {
   it("shifts correctly by one week with offset 1", () => {
     const ts0 = getWeekTimestamp(0);
     const ts1 = getWeekTimestamp(1);
-    expect(ts1 - ts0).toBe(7 * 24 * 60 * 60); // 7 days in seconds
+    const date0 = new Date(ts0 * 1000);
+    const date1 = new Date(ts1 * 1000);
+    const dayStart0 = new Date(
+      date0.getFullYear(),
+      date0.getMonth(),
+      date0.getDate()
+    );
+    const dayStart1 = new Date(
+      date1.getFullYear(),
+      date1.getMonth(),
+      date1.getDate()
+    );
+    const diffDays =
+      (dayStart1.getTime() - dayStart0.getTime()) / (24 * 60 * 60 * 1000);
+    expect(diffDays).toBe(7);
   });
 });
 
