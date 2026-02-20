@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { config } from "./config.js";
+import { config } from "../config.js";
 
 export interface Match {
   competition: string;
