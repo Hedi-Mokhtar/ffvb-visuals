@@ -60,7 +60,7 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
   })
     .composite([
       { input: Buffer.from(svg), top: 0, left: 0 },
-      { input: logo, top: 100, left: WIDTH / 2 - 80 },
+      { input: logo, top: 70, left: WIDTH / 2 - 80 },
     ])
     .png()
     .toFile(outputPath);
