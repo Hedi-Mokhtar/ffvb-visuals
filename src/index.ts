@@ -1,11 +1,11 @@
-import { fetchMatches } from "./scraper.js";
-import { groupMatchesByCategory } from "./categories.js";
+import { fetchMatches } from "./scraper/scraper.js";
+import { groupMatchesByCategory } from "./matches/categories.js";
 import {
   generateUpcomingVisual,
   generateResultsVisual,
-} from "./imageGenerator.js";
+} from "./generator/index.js";
 import { mkdirSync } from "fs";
-import type { Category } from "./categories.js";
+import type { Category } from "./matches/categories.js";
 
 mkdirSync("output", { recursive: true });
 mkdirSync("assets", { recursive: true });
