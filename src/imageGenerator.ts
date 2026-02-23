@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import path from "path";
 import { fileURLToPath } from "url";
-import type { Match } from "./scraper.js";
+import type { Match } from "./scraper/scraper.js";
 import type { Category } from "./categories.js";
 import { getCompetitionLabel } from "./competitionLabels.js";
 
