@@ -2,19 +2,38 @@ import sharp from "sharp";
 import path from "path";
 import type { Match } from "../scraper/scraper.js";
 import { getCompetitionLabel } from "../matches/competitionLabels.js";
-import {
-  WIDTH,
-  HEIGHT,
-  ASSETS_DIR,
-  OUTPUT_DIR,
-  svgText,
-  svgLine,
-  isSJL,
-} from "./helpers.js";
+import { WIDTH, HEIGHT, ASSETS_DIR, OUTPUT_DIR, isSJL } from "./helpers.js";
 
 export async function generateUpcomingVisual(match: Match): Promise<string> {
   const logo = await sharp(path.join(ASSETS_DIR, "logo.png"))
-    .resize(160, 160)
+    .resize(200, 200)
+    .toBuffer();
+
+  const logoWithBackground = await sharp({
+    create: {
+      width: 220,
+      height: 220,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 0 },
+    },
+  })
+    .composite([
+      {
+        input: Buffer.from(`
+        <svg width="220" height="220" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="110" cy="110" r="108" fill="white"/>
+        </svg>
+      `),
+        top: 0,
+        left: 0,
+      },
+      {
+        input: logo,
+        top: 10,
+        left: 10,
+      },
+    ])
+    .png()
     .toBuffer();
 
   const isHome = isSJL(match.domicile);
@@ -23,25 +42,73 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
 
   const svg = `
     <svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="${WIDTH}" height="${HEIGHT}" fill="white"/>
-      <circle cx="0" cy="0" r="120" fill="#CC1E1E" opacity="0.15"/>
-      <circle cx="${WIDTH}" cy="${HEIGHT}" r="120" fill="#CC1E1E" opacity="0.15"/>
+      <defs>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Montserrat:wght@400;700&amp;display=swap');
+        </style>
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#CC1E1E"/>
+          <stop offset="45%" stop-color="#8B0000"/>
+          <stop offset="100%" stop-color="#1a1a1a"/>
+        </linearGradient>
+        <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#f5f5f5"/>
+        </linearGradient>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#00000033"/>
+        </filter>
+      </defs>
 
-      ${svgText("MATCHS A", WIDTH / 2, 280, 62, "#CC1E1E", "bold")}
-      ${svgText("VENIR", WIDTH / 2, 345, 62, "#CC1E1E", "bold")}
-      ${svgText(competition.toUpperCase(), WIDTH / 2, 405, 30, "#000000", "bold")}
-      ${svgLine(80, 430, WIDTH - 80, 430, "#CC1E1E", 2)}
+      <!-- Fond dégradé rouge/sombre -->
+      <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#bgGrad)"/>
 
-      ${svgText(match.date, WIDTH / 2, 475, 32, "#000000", "normal")}
-      ${svgText(`À ${match.heure}`, WIDTH / 2, 515, 32, "#000000", "normal")}
-      ${svgText(isHome ? "À DOMICILE" : "À L'EXTÉRIEUR", WIDTH / 2, 555, 32, "#000000", "normal")}
-      ${svgLine(80, 580, WIDTH - 80, 580, "#CC1E1E", 2)}
+      <!-- Formes géométriques décoratives -->
+      <circle cx="-40" cy="160" r="200" fill="white" opacity="0.04"/>
+      <circle cx="${WIDTH + 60}" cy="400" r="250" fill="white" opacity="0.04"/>
+      <circle cx="${WIDTH / 2}" cy="200" r="350" fill="white" opacity="0.03"/>
 
-      ${svgText("SPORT JOIE", WIDTH / 2, 660, 50, "#CC1E1E", "bold")}
-      ${svgText("LILLE", WIDTH / 2, 720, 50, "#CC1E1E", "bold")}
-      ${svgText("vs", WIDTH / 2, 775, 32, "#000000", "normal")}
-      ${svgText(adversaire, WIDTH / 2, 840, 40, "#000000", "bold")}
-      ${svgLine(80, 900, WIDTH - 80, 900, "#CC1E1E", 2)}
+      <!-- Lignes diagonales décoratives -->
+      <line x1="0" y1="${HEIGHT * 0.3}" x2="${WIDTH}" y2="${HEIGHT * 0.15}" stroke="white" stroke-width="1" opacity="0.08"/>
+      <line x1="0" y1="${HEIGHT * 0.35}" x2="${WIDTH}" y2="${HEIGHT * 0.2}" stroke="white" stroke-width="1" opacity="0.05"/>
+
+      <!-- Carte blanche centrale -->
+      <rect x="40" y="330" width="${WIDTH - 80}" height="710" rx="20" ry="20" fill="url(#cardGrad)" filter="url(#shadow)"/>
+
+      <!-- Bandeau titre en haut de carte -->
+      <rect x="40" y="330" width="${WIDTH - 80}" height="80" rx="20" ry="20" fill="#CC1E1E"/>
+      <rect x="40" y="370" width="${WIDTH - 80}" height="40" fill="#CC1E1E"/>
+
+      <!-- Titre MATCHS À VENIR (blanc, dans la zone rouge) -->
+      <text x="${WIDTH / 2}" y="382" font-size="36" fill="white" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="4">MATCHS À VENIR</text>
+
+      <!-- Compétition -->
+      <text x="${WIDTH / 2}" y="450" font-size="22" fill="#CC1E1E" font-weight="bold" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif" letter-spacing="2">${competition.toUpperCase()}</text>
+
+      <!-- Séparateur -->
+      <line x1="120" y1="470" x2="${WIDTH - 120}" y2="470" stroke="#CC1E1E" stroke-width="1.5" opacity="0.4"/>
+
+      <!-- Date / heure / lieu -->
+      <text x="${WIDTH / 2}" y="515" font-size="26" fill="#222222" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${match.date} · ${match.heure}</text>
+      <text x="${WIDTH / 2}" y="552" font-size="20" fill="#666666" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${isHome ? "À DOMICILE" : "À L'EXTÉRIEUR"}</text>
+
+      <!-- Séparateur -->
+      <line x1="120" y1="578" x2="${WIDTH - 120}" y2="578" stroke="#CC1E1E" stroke-width="1.5" opacity="0.4"/>
+
+      <!-- SJL en grand -->
+      <text x="${WIDTH / 2}" y="660" font-size="64" fill="#CC1E1E" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="6">SPORT JOIE</text>
+      <text x="${WIDTH / 2}" y="730" font-size="64" fill="#CC1E1E" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="6">LILLE</text>
+
+      <!-- VS badge -->
+      <circle cx="${WIDTH / 2}" cy="785" r="28" fill="#CC1E1E"/>
+      <text x="${WIDTH / 2}" y="793" font-size="22" fill="white" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="2">VS</text>
+
+      <!-- Adversaire -->
+      <text x="${WIDTH / 2}" y="860" font-size="38" fill="#1a1a1a" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="3">${adversaire}</text>
+
+      <!-- Bande décorative bas de carte -->
+      <rect x="40" y="980" width="${WIDTH - 80}" height="10" rx="0" ry="0" fill="#CC1E1E" opacity="0.15"/>
+      <rect x="40" y="1000" width="${WIDTH - 80}" height="40" rx="0" ry="20" fill="#CC1E1E"/>
     </svg>
   `;
 
@@ -55,12 +122,12 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
       width: WIDTH,
       height: HEIGHT,
       channels: 4,
-      background: { r: 255, g: 255, b: 255, alpha: 1 },
+      background: { r: 204, g: 30, b: 30, alpha: 1 },
     },
   })
     .composite([
       { input: Buffer.from(svg), top: 0, left: 0 },
-      { input: logo, top: 70, left: WIDTH / 2 - 80 },
+      { input: logoWithBackground, top: 90, left: WIDTH / 2 - 100 },
     ])
     .png()
     .toFile(outputPath);
