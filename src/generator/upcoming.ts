@@ -45,7 +45,26 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
 
   const isHome = isSJL(match.domicile);
   const adversaire = escapeXml(isHome ? match.exterieur : match.domicile);
+  function getAdversaireFontSize(name: string): number {
+    if (name.length <= 12) return 38;
+    if (name.length <= 18) return 30;
+    if (name.length <= 24) return 24;
+    return 20;
+  }
+
+  const adversaireFontSize = getAdversaireFontSize(adversaire);
   const competition = escapeXml(getCompetitionLabel(match.competition));
+  const salle = escapeXml(match.salle || "");
+  const JOURS = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
+
+  function getDayLabel(dateStr: string): string {
+    const [d = 1, m = 1] = dateStr.split("/").map(Number);
+    const date = new Date(new Date().getFullYear(), m - 1, d);
+    return JOURS[date.getDay()] ?? "";
+  }
+
+  const dayLabel = getDayLabel(match.date);
+
   const date = escapeXml(match.date);
   const heure = escapeXml(match.heure);
 
@@ -98,7 +117,7 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
       <line x1="120" y1="470" x2="${WIDTH - 120}" y2="470" stroke="#CC1E1E" stroke-width="1.5" opacity="0.4"/>
 
       <!-- Date / heure / lieu -->
-      <text x="${WIDTH / 2}" y="515" font-size="26" fill="#222222" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${date} · ${heure}</text>
+      <text x="${WIDTH / 2}" y="515" font-size="26" fill="#222222" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${dayLabel} ${date} · ${heure}</text>
       <text x="${WIDTH / 2}" y="552" font-size="20" fill="#666666" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${isHome ? "À DOMICILE" : "À L'EXTÉRIEUR"}</text>
 
       <!-- Séparateur -->
@@ -113,7 +132,21 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
       <text x="${WIDTH / 2}" y="793" font-size="22" fill="white" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="2">VS</text>
 
       <!-- Adversaire -->
-      <text x="${WIDTH / 2}" y="860" font-size="38" fill="#1a1a1a" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="3">${adversaire}</text>
+      <text x="${WIDTH / 2}" y="860" font-size="${adversaireFontSize}" fill="#1a1a1a" font-weight="bold" text-anchor="middle" font-family="'Bebas Neue', 'Arial Black', sans-serif" letter-spacing="3">${adversaire}</text>
+
+      <!-- Icône domicile/extérieur centrée en bas -->
+      <g transform="translate(${WIDTH / 2 - 16}, 900)">
+        <svg width="32" height="32" viewBox="0 0 24 24">
+          <path d="${
+            isHome
+              ? "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
+              : "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"
+          }" fill="#CC1E1E"/>
+        </svg>
+      </g>
+
+      <text x="${WIDTH / 2}" y="950" font-size="20" fill="#666666" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${salle}</text>
+
 
       <!-- Bande décorative bas de carte -->
       <rect x="40" y="980" width="${WIDTH - 80}" height="10" rx="0" ry="0" fill="#CC1E1E" opacity="0.15"/>

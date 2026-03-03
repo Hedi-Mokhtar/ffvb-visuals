@@ -8,6 +8,7 @@ export interface Match {
   heure: string;
   domicile: string;
   exterieur: string;
+  salle?: string;
   scoreDomicile?: string;
   scoreExterieur?: string;
   joue: boolean;
@@ -36,6 +37,15 @@ export function parseMatches(html: string): Match[] {
       const scoreDom = $(cells[7]).text().trim();
       const scoreExt = $(cells[8]).text().trim();
 
+      const joue = /^\d+$/.test(scoreDom) && /^\d+$/.test(scoreExt);
+      const salle = joue
+        ? undefined
+        : $(row)
+            .find("td.liengris_pt")
+            .toArray()
+            .map((el) => $(el).text().trim())
+            .find((txt) => txt.length > 10) || undefined;
+
       if (date && domicile && exterieur && date !== "Compétition") {
         matches.push({
           competition: currentCompetition,
@@ -43,16 +53,18 @@ export function parseMatches(html: string): Match[] {
           heure,
           domicile,
           exterieur,
-          ...(scoreDom && { scoreDomicile: scoreDom }),
-          ...(scoreExt && { scoreExterieur: scoreExt }),
-          joue: scoreDom !== "" && scoreExt !== "",
+          ...(salle && { salle }),
+          ...(joue && scoreDom && { scoreDomicile: scoreDom }),
+          ...(joue && scoreExt && { scoreExterieur: scoreExt }),
+          joue,
         });
       }
     }
   });
-
+  console.log("Parsed matches:", matches);
   return matches;
 }
+
 export function getMondayTimestamp(weekOffset: number): number {
   const now = new Date();
   const day = now.getUTCDay();
@@ -62,7 +74,7 @@ export function getMondayTimestamp(weekOffset: number): number {
     Date.UTC(
       now.getUTCFullYear(),
       now.getUTCMonth(),
-      now.getUTCDate() + diffToMonday + (weekOffset - 1) * 7, // -1 ici
+      now.getUTCDate() + diffToMonday + (weekOffset - 1) * 7,
       23,
       0,
       0,
@@ -82,6 +94,7 @@ export async function fetchMatches(weekOffset: number): Promise<Match[]> {
   const decoded = new TextDecoder("iso-8859-1").decode(data);
   return parseMatches(decoded);
 }
+
 export function filterCurrentWeek(matches: Match[]): Match[] {
   const now = new Date();
   const day = now.getDay();
@@ -103,7 +116,7 @@ export function filterCurrentWeek(matches: Match[]): Match[] {
   );
 
   return matches.filter((match) => {
-    const [d, m] = match.date.split("/").map(Number);
+    const [d = 1, m = 1] = match.date.split("/").map(Number);
     const matchDate = new Date(now.getFullYear(), m - 1, d);
     console.log(
       "Match date:",
