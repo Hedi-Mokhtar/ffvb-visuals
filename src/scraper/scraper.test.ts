@@ -1,19 +1,19 @@
 import { readFileSync } from "fs";
 import { describe, it, expect } from "vitest";
-import { parseMatches, getWeekTimestamp } from "./scraper.js";
+import { parseMatches, getMondayTimestamp } from "./scraper.js";
 
 const fixtureHtml = readFileSync("tests/fixtures/ffvb-response.html", "utf-8");
 
-describe("getWeekTimestamp", () => {
+describe("getMondayTimestamp", () => {
   it("returns a timestamp corresponding to a Monday", () => {
-    const timestamp = getWeekTimestamp(0);
+    const timestamp = getMondayTimestamp(0);
     const date = new Date(timestamp * 1000);
-    expect(date.getDay()).toBe(1); // 1 = monday
+    expect(date.getUTCDay()).toBe(1);
   });
 
   it("shifts correctly by one week with offset 1", () => {
-    const ts0 = getWeekTimestamp(0);
-    const ts1 = getWeekTimestamp(1);
+    const ts0 = getMondayTimestamp(0);
+    const ts1 = getMondayTimestamp(1);
     const date0 = new Date(ts0 * 1000);
     const date1 = new Date(ts1 * 1000);
     const dayStart0 = new Date(
