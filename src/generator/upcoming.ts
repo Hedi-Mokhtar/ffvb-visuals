@@ -2,7 +2,14 @@ import sharp from "sharp";
 import path from "path";
 import type { Match } from "../scraper/scraper.js";
 import { getCompetitionLabel } from "../matches/competitionLabels.js";
-import { WIDTH, HEIGHT, ASSETS_DIR, OUTPUT_DIR, isSJL } from "./helpers.js";
+import {
+  WIDTH,
+  HEIGHT,
+  ASSETS_DIR,
+  OUTPUT_DIR,
+  isSJL,
+  escapeXml,
+} from "./helpers.js";
 
 export async function generateUpcomingVisual(match: Match): Promise<string> {
   const logo = await sharp(path.join(ASSETS_DIR, "logo.png"))
@@ -37,8 +44,10 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
     .toBuffer();
 
   const isHome = isSJL(match.domicile);
-  const adversaire = isHome ? match.exterieur : match.domicile;
-  const competition = getCompetitionLabel(match.competition);
+  const adversaire = escapeXml(isHome ? match.exterieur : match.domicile);
+  const competition = escapeXml(getCompetitionLabel(match.competition));
+  const date = escapeXml(match.date);
+  const heure = escapeXml(match.heure);
 
   const svg = `
     <svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +98,7 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
       <line x1="120" y1="470" x2="${WIDTH - 120}" y2="470" stroke="#CC1E1E" stroke-width="1.5" opacity="0.4"/>
 
       <!-- Date / heure / lieu -->
-      <text x="${WIDTH / 2}" y="515" font-size="26" fill="#222222" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${match.date} · ${match.heure}</text>
+      <text x="${WIDTH / 2}" y="515" font-size="26" fill="#222222" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${date} · ${heure}</text>
       <text x="${WIDTH / 2}" y="552" font-size="20" fill="#666666" font-weight="normal" text-anchor="middle" font-family="'Montserrat', Arial, sans-serif">${isHome ? "À DOMICILE" : "À L'EXTÉRIEUR"}</text>
 
       <!-- Séparateur -->
@@ -114,7 +123,7 @@ export async function generateUpcomingVisual(match: Match): Promise<string> {
 
   const outputPath = path.join(
     OUTPUT_DIR,
-    `upcoming_${match.competition.split(" ")[0]}_${match.date.replace("/", "-")}.png`
+    `upcoming_${match.competition.split(" ")[0]}_${date.replace("/", "-")}.png`
   );
 
   await sharp({
