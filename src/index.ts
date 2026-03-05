@@ -1,4 +1,4 @@
-import { fetchMatches } from "./scraper/scraper.js";
+import { fetchMatches, filterCurrentWeek } from "./scraper/scraper.js";
 import { groupMatchesByCategory } from "./matches/categories.js";
 import {
   generateUpcomingVisual,
@@ -12,7 +12,8 @@ mkdirSync("assets", { recursive: true });
 
 async function main() {
   console.log("Récupération des matchs...");
-  const upcoming = await fetchMatches(1);
+  const [week0, week1] = await Promise.all([fetchMatches(0), fetchMatches(1)]);
+  const upcoming = filterCurrentWeek([...week0, ...week1]);
   const results = await fetchMatches(-1);
 
   console.log("Génération des visuels à venir...");

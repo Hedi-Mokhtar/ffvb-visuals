@@ -7,12 +7,13 @@ function handleError(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
   }
-  return "Erreur inconnue";
+  return "Unknown error";
 }
 
 router.get("/upcoming", async (_req, res) => {
   try {
-    const matches = await fetchMatches(1);
+    console.log("[/matches/upcoming] Fetching upcoming matches...");
+    const matches = await fetchMatches(0);
     res.json({ success: true, data: matches });
   } catch (error) {
     console.error("[/matches/upcoming]", error);
@@ -22,6 +23,7 @@ router.get("/upcoming", async (_req, res) => {
 
 router.get("/results", async (_req, res) => {
   try {
+    console.log("[/matches/results] Fetching past matches...");
     const matches = await fetchMatches(-1);
     res.json({ success: true, data: matches });
   } catch (error) {

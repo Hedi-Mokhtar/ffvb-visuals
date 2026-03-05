@@ -154,7 +154,7 @@ export async function generateResultsVisual(
         <rect x="40" y="${CARD_TOP + 40}" width="${WIDTH - 80}" height="40" fill="#CC1E1E"/>
 
         <!-- Titre -->
-        <text x="${WIDTH / 2}" y="${CARD_TOP + 46}" font-size="34" fill="white" font-weight="bold" text-anchor="middle"
+        <text x="${WIDTH / 2}" y="${CARD_TOP + 46}" font-size="32" fill="white" font-weight="bold" text-anchor="middle"
           font-family="'Bebas Neue', Impact, 'Arial Black', sans-serif" letter-spacing="4">RÉSULTATS DES MATCHS</text>
 
         <!-- Catégorie + page -->
