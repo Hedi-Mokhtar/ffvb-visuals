@@ -13,6 +13,7 @@ export const COMPETITION_LABELS: Record<string, string> = {
   JFD: "Coupe de France M21 Féminine",
   MFL: "M15 Féminine",
   BMI: "M13 Benjamin",
+  JFG: "Coupe de france M21 Feminine",
   // Compét loisir
   RC1: "Loisir Corpo",
   DLA: "Détente Loisir Excellence A",
