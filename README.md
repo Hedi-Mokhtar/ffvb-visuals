@@ -1,6 +1,10 @@
 # ffvb-visuals
 
-![PR Checks](https://github.com/<your-org>/ffvb-visuals/actions/workflows/pr.yaml/badge.svg)
+[![PR Checks](https://github.com/Hedi-Mokhtar/ffvb-visuals/actions/workflows/pr-check.yml/badge.svg)](https://github.com/Hedi-Mokhtar/ffvb-visuals/actions/workflows/pr-check.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
 ![Node.js](https://img.shields.io/badge/node-22-brightgreen?logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)
 ![pnpm](https://img.shields.io/badge/pnpm-10.30-orange?logo=pnpm)
@@ -30,31 +34,43 @@ Images are generated using [Sharp](https://sharp.pixelplumbing.com/) with SVG co
 
 ## Project Structure
 
-```
-.
-├── assets/
-│   └── logo.png               # Club logo used in visuals
+```.
+├── .github/
+│   ├── dependabot.yml
+│   └── workflows/
+│       └── pr-check.yml
 ├── src/
 │   ├── api/
-│   │   ├── server.ts          # Express API server
-│   │   ├── routes/            # API route handlers
-│   │   └── server.test.ts     # API integration tests
+│   │   ├── index.ts               # API entry point
+│   │   ├── server.ts              # Express app
+│   │   ├── server.test.ts         # API integration tests
+│   │   └── routes/
+│   │       └── matches.ts         # /matches route handlers
 │   ├── generator/
-│   │   ├── upcoming.ts        # Generates "upcoming match" visuals
-│   │   ├── results.ts         # Generates "results" visuals
-│   │   ├── helpers.ts         # Shared SVG helpers & constants
-│   │   └── index.ts           # Generator entry point
+│   │   ├── helpers.ts             # Shared SVG helpers & constants
+│   │   ├── helpers.test.ts
+│   │   ├── upcoming.ts            # Generates "upcoming match" visuals
+│   │   ├── upcoming.test.ts
+│   │   ├── results.ts             # Generates "results" visuals
+│   │   ├── results.test.ts
+│   │   └── index.ts               # Generator entry point
 │   ├── matches/
-│   │   ├── categories.ts      # Match category definitions (seniors, jeunes, competlib)
-│   │   └── competitionLabels.ts # Human-readable competition name mapping
+│   │   ├── categories.ts          # Match category definitions
+│   │   ├── categories.test.ts
+│   │   ├── competitionLabels.ts   # Human-readable competition name mapping
+│   │   ├── competitionLabels.test.ts
+│   │   ├── groupMatches.ts        # Groups upcoming matches by competition/date
+│   │   └── groupMatches.test.ts
 │   ├── scraper/
-│   │   └── scraper.ts         # FFVB scraper (axios + cheerio)
-│   ├── config.ts              # Club ID & base URL config
-│   └── index.ts               # Main entry point
-├── tests/
-│   └── fixtures/
-│       └── ffvb-response.html # HTML fixture for scraper unit tests
-└── output/                    # Generated PNG files
+│   │   ├── scraper.ts             # FFVB scraper (axios + cheerio)
+│   │   ├── scraper.test.ts
+│   │   └── fixtures/
+│   │       └── ffvb-response.html # HTML fixture for scraper tests
+│   ├── config.ts                  # Club ID & base URL config
+│   └── index.ts                   # Main CLI entry point
+├── sonar-project.properties
+├── vitest.config.ts
+└── tsconfig.json
 ```
 
 ---
@@ -158,7 +174,7 @@ Visuals are composed using Sharp:
 
 ## CI/CD
 
-Pull requests to `main` are validated by the **PR Checks** workflow (`.github/workflows/pr.yaml`):
+Pull requests to `main` are validated by the **PR Checks** workflow (`.github/workflows/pr-check.yaml`):
 
 - ✅ Lint (ESLint)
 - ✅ Format check (Prettier)
