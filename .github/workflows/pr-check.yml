@@ -40,10 +40,7 @@ jobs:
         run: pnpm format:check
 
       - name: Test
-        run: pnpm test --run --coverage
-
-      - name: Debug coverage
-        run: ls -la coverage/
+        run: pnpm test --run
 
       - name: Build
         run: pnpm build
