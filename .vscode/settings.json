@@ -6,5 +6,9 @@
   },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "hedi-mokhtar",
+    "projectKey": "Hedi-Mokhtar_ffvb-visuals"
   }
 }
