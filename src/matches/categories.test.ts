@@ -59,4 +59,20 @@ describe("groupMatchesByCategory", () => {
     expect(groups.jeunes).toHaveLength(1);
     expect(groups.competlib).toHaveLength(1);
   });
+
+  it("ignore les matchs dont la compétition est inconnue", () => {
+    const groups = groupMatchesByCategory([
+      {
+        competition: "XYZ - INCONNUE",
+        date: "01/03",
+        heure: "18:00",
+        domicile: "TEAM A",
+        exterieur: "TEAM B",
+        joue: false,
+      },
+    ]);
+    expect(groups.seniors).toHaveLength(0);
+    expect(groups.jeunes).toHaveLength(0);
+    expect(groups.competlib).toHaveLength(0);
+  });
 });
