@@ -112,8 +112,9 @@ describe("generateUpcomingVisual", () => {
   });
 
   it("handles a match without a venue (salle undefined)", async () => {
-    const noSalleMatch = { ...baseMatch, salle: undefined };
-    const result = await generateUpcomingVisual(noSalleMatch);
+    const matchWithoutSalle = { ...baseMatch } as typeof baseMatch;
+    delete matchWithoutSalle.salle;
+    const result = await generateUpcomingVisual(matchWithoutSalle);
     expect(result).toContain("upcoming_PFA");
   });
 
