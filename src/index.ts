@@ -3,38 +3,17 @@ import {
   filterCurrentWeek,
   filterLastWeek,
 } from "./scraper/scraper.js";
-import type { Match } from "./scraper/scraper.js";
 import { groupMatchesByCategory } from "./matches/categories.js";
 import {
   generateUpcomingVisual,
   generateResultsVisual,
 } from "./generator/index.js";
-import { isSJL } from "./generator/helpers.js";
 import { mkdirSync } from "node:fs";
 import type { Category } from "./matches/categories.js";
+import { groupUpcomingMatches } from "./matches/groupMatches.js";
 
 mkdirSync("output", { recursive: true });
 mkdirSync("assets", { recursive: true });
-
-function groupUpcomingMatches(
-  matches: Match[]
-): (Match & { adversaires: string[] })[] {
-  const map = new Map<string, Match & { adversaires: string[] }>();
-
-  for (const match of matches) {
-    const isHome = isSJL(match.domicile);
-    const adversaire = isHome ? match.exterieur : match.domicile;
-    const key = `${match.competition}_${match.date}`;
-
-    if (map.has(key)) {
-      map.get(key)!.adversaires.push(adversaire);
-    } else {
-      map.set(key, { ...match, adversaires: [adversaire] });
-    }
-  }
-
-  return Array.from(map.values());
-}
 
 console.log("Récupération des matchs...");
 const [weekMinus1, week0, week1] = await Promise.all([

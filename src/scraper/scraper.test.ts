@@ -1,9 +1,10 @@
 import { readFileSync } from "fs";
 import { describe, it, expect } from "vitest";
 import { parseMatches, getMondayTimestamp } from "./scraper.js";
+import { join } from "node:path";
 
 const fixtureHtml = readFileSync(
-  "src/scraper/fixtures/ffvb-response.html",
+  join(import.meta.dirname, "fixtures/ffvb-response.html"),
   "utf-8"
 );
 
@@ -74,5 +75,13 @@ describe("parseMatches", () => {
       expect(match.scoreDomicile).toBeUndefined();
       expect(match.scoreExterieur).toBeUndefined();
     }
+  });
+
+  it("returns an empty array for HTML without a table", () => {
+    expect(parseMatches("<html><body></body></html>")).toEqual([]);
+  });
+
+  it("getMondayTimestamp returns different timestamps for different offsets", () => {
+    expect(getMondayTimestamp(0)).not.toBe(getMondayTimestamp(1));
   });
 });

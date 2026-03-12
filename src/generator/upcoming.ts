@@ -13,7 +13,7 @@ import {
 
 const JOURS = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
 
-function splitAdversaire(
+export function splitAdversaire(
   name: string,
   maxLength = 16
 ): [string, string | null] {
@@ -34,13 +34,13 @@ function splitAdversaire(
   return [line1, line2 || null];
 }
 
-function getAdversaireFontSize(name: string): number {
+export function getAdversaireFontSize(name: string): number {
   if (name.length <= 12) return 32;
   if (name.length <= 24) return 24;
   return 20;
 }
 
-function getDayLabel(dateStr: string): string {
+export function getDayLabel(dateStr: string): string {
   const [d = 1, m = 1] = dateStr.split("/").map(Number);
   const date = new Date(new Date().getFullYear(), m - 1, d);
   return JOURS[date.getDay()] ?? "";

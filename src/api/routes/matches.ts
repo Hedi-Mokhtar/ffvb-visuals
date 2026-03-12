@@ -3,7 +3,7 @@ import { fetchMatches } from "../../scraper/scraper.js";
 
 const router: IRouter = Router();
 
-function handleError(error: unknown): string {
+export function handleError(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
   }
