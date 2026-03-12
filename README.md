@@ -1,6 +1,10 @@
 # ffvb-visuals
 
-![PR Checks](https://github.com/<your-org>/ffvb-visuals/actions/workflows/pr.yaml/badge.svg)
+[![PR Checks](https://github.com/Hedi-Mokhtar/ffvb-visuals/actions/workflows/pr-check.yml/badge.svg)](https://github.com/Hedi-Mokhtar/ffvb-visuals/actions/workflows/pr-check.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Hedi-Mokhtar_ffvb-visuals&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Hedi-Mokhtar_ffvb-visuals)
 ![Node.js](https://img.shields.io/badge/node-22-brightgreen?logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)
 ![pnpm](https://img.shields.io/badge/pnpm-10.30-orange?logo=pnpm)
