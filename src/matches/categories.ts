@@ -9,13 +9,9 @@ const CATEGORY_PREFIXES: Record<Category, string[]> = {
 export function getCategory(competition: string): Category | null {
   for (const [category, prefixes] of Object.entries(CATEGORY_PREFIXES)) {
     if (prefixes.some((prefix) => competition.startsWith(prefix))) {
-      console.log(`  ✓ ${competition} → ${category}`);
-
       return category as Category;
     }
   }
-  console.log(`  ✗ ${competition} → null`);
-
   return null;
 }
 
@@ -29,7 +25,6 @@ export function groupMatchesByCategory<T extends { competition: string }>(
   };
 
   for (const match of matches) {
-    console.log("competition field:", match.competition);
     const category = getCategory(match.competition);
     if (category) {
       groups[category].push(match);
