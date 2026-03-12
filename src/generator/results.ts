@@ -112,7 +112,7 @@ export async function generateResultsVisual(
           font-family="'Bebas Neue', Impact, 'Arial Black', sans-serif" letter-spacing="2">VS  ${adversaire}</text>
       `;
 
-      // SSeparator (except for the last one)
+      // Separator (except for the last one)
       if (i < pageMatches.length - 1) {
         matchesSvg += `<line x1="60" y1="${blockY + MATCH_BLOCK_HEIGHT - 14}" x2="${WIDTH - 60}" y2="${blockY + MATCH_BLOCK_HEIGHT - 14}" stroke="#eeeeee" stroke-width="1.5"/>`;
       }
