@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import path from "path";
+import path from "node:path";
 import type { Match } from "../scraper/scraper.js";
 import type { Category } from "../matches/categories.js";
 import { getCompetitionLabel } from "../matches/competitionLabels.js";
