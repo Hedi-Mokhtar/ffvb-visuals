@@ -1,9 +1,11 @@
+// NOSONAR - SuperTest returns a thenable object, not a strict Promise
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import { app } from "./server.js";
 import * as scraper from "../scraper/scraper.js";
 
-vi.mock("./scraper.js");
+vi.mock("../scraper/scraper.js");
 
 const mockMatches = [
   {

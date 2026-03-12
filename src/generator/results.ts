@@ -13,22 +13,27 @@ const CATEGORY_LABELS: Record<Category, string> = {
 
 const MATCHES_PER_PAGE = 5;
 
-// Hauteur de la zone carte blanche
+// Height of the white card where matches are listed (excluding the red title banner)
 const CARD_TOP = 330;
 const CARD_HEIGHT = HEIGHT - CARD_TOP - 40;
+
+export function paginateMatches<T>(items: T[], perPage: number): T[][] {
+  const pages: T[][] = [];
+  for (let i = 0; i < items.length; i += perPage) {
+    pages.push(items.slice(i, i + perPage));
+  }
+  return pages;
+}
 
 export async function generateResultsVisual(
   matches: Match[],
   category: Category
 ): Promise<string[]> {
   const playedMatches = matches.filter((m) => m.joue);
-  const pages: Match[][] = [];
 
-  for (let i = 0; i < playedMatches.length; i += MATCHES_PER_PAGE) {
-    pages.push(playedMatches.slice(i, i + MATCHES_PER_PAGE));
-  }
+  const pages = paginateMatches(playedMatches, MATCHES_PER_PAGE);
 
-  // Logo avec fond blanc circulaire (même technique que upcoming)
+  // Logo with circular white background (same technique as upcoming)
   const logoRaw = await sharp(path.join(ASSETS_DIR, "logo.png"))
     .resize(200, 200)
     .toBuffer();
@@ -61,8 +66,8 @@ export async function generateResultsVisual(
     const pageMatches = pages[pageIndex];
     if (!pageMatches) continue;
 
-    // Chaque match occupe ~114px dans la carte (après le bandeau titre de 80px)
-    // Zone disponible pour les matchs : depuis y=490 jusqu'à ~1060
+    // Each match occupies ~114px in the card (after the 80px title banner)
+    // Available area for matches: from y=490 to ~1060
     const MATCHES_START_Y = 490;
     const MATCH_BLOCK_HEIGHT = Math.floor(
       (HEIGHT - 40 - MATCHES_START_Y) / MATCHES_PER_PAGE
@@ -87,19 +92,19 @@ export async function generateResultsVisual(
       const scoreBg = hasWon ? "#e8f7e8" : "#fdecea";
       const score = `${scoreSJL}-${scoreAdv}`;
 
-      // Fond léger pour chaque ligne de match (alternance subtile)
+      // Light background for each match row (subtle alternation)
       if (i % 2 === 0) {
         matchesSvg += `<rect x="60" y="${blockY - 18}" width="${WIDTH - 120}" height="${MATCH_BLOCK_HEIGHT - 6}" rx="10" ry="10" fill="#f9f9f9"/>`;
       }
 
-      // Badge score coloré
+      // Colored score badge
       matchesSvg += `
         <rect x="65" y="${blockY - 10}" width="80" height="36" rx="8" ry="8" fill="${scoreBg}"/>
         <text x="105" y="${blockY + 15}" font-size="22" fill="${scoreColor}" font-weight="bold" text-anchor="middle"
           font-family="'Bebas Neue', Impact, 'Arial Black', sans-serif" letter-spacing="2">${score}</text>
       `;
 
-      // Compétition + adversaire
+      // Competition + opponent
       matchesSvg += `
         <text x="160" y="${blockY + 8}" font-size="17" fill="#CC1E1E" font-weight="bold" text-anchor="start"
           font-family="'Montserrat', Arial, sans-serif" letter-spacing="1">${competition.toUpperCase()}</text>
@@ -107,7 +112,7 @@ export async function generateResultsVisual(
           font-family="'Bebas Neue', Impact, 'Arial Black', sans-serif" letter-spacing="2">VS  ${adversaire}</text>
       `;
 
-      // Séparateur (sauf dernier)
+      // Separator (except for the last one)
       if (i < pageMatches.length - 1) {
         matchesSvg += `<line x1="60" y1="${blockY + MATCH_BLOCK_HEIGHT - 14}" x2="${WIDTH - 60}" y2="${blockY + MATCH_BLOCK_HEIGHT - 14}" stroke="#eeeeee" stroke-width="1.5"/>`;
       }
