@@ -2,8 +2,8 @@ export type Category = "seniors" | "jeunes" | "competlib";
 
 const CATEGORY_PREFIXES: Record<Category, string[]> = {
   seniors: ["PFA", "M1F", "M1M", "DMA", "1FA", "1MB"],
-  jeunes: ["JFE", "JFD", "MFL"],
-  competlib: ["RC1", "DLA", "DLB"],
+  jeunes: ["JFE", "JFD", "MFL", "CMI", "CFO", "BMI", "JFG"],
+  competlib: ["RC1", "DLA", "DLB", "DSL"],
 };
 
 export function getCategory(competition: string): Category | null {
