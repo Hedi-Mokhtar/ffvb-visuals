@@ -1,3 +1,5 @@
+// NOSONAR - SuperTest returns a thenable object, not a strict Promise
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import { app } from "./server.js";

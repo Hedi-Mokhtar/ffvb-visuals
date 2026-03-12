@@ -37,7 +37,7 @@ describe("getAdversaireFontSize", () => {
 });
 
 it("returns a consistent label with the JS date", () => {
-  const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const DAYS = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
   const year = new Date().getFullYear();
   const date = new Date(year, 2, 10); // March 10 of the current year
   const expected = DAYS[date.getDay()];
