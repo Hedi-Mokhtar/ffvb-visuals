@@ -34,31 +34,43 @@ Images are generated using [Sharp](https://sharp.pixelplumbing.com/) with SVG co
 
 ## Project Structure
 
-```
-.
-├── assets/
-│   └── logo.png               # Club logo used in visuals
+```.
+├── .github/
+│   ├── dependabot.yml
+│   └── workflows/
+│       └── pr-check.yml
 ├── src/
 │   ├── api/
-│   │   ├── server.ts          # Express API server
-│   │   ├── routes/            # API route handlers
-│   │   └── server.test.ts     # API integration tests
+│   │   ├── index.ts               # API entry point
+│   │   ├── server.ts              # Express app
+│   │   ├── server.test.ts         # API integration tests
+│   │   └── routes/
+│   │       └── matches.ts         # /matches route handlers
 │   ├── generator/
-│   │   ├── upcoming.ts        # Generates "upcoming match" visuals
-│   │   ├── results.ts         # Generates "results" visuals
-│   │   ├── helpers.ts         # Shared SVG helpers & constants
-│   │   └── index.ts           # Generator entry point
+│   │   ├── helpers.ts             # Shared SVG helpers & constants
+│   │   ├── helpers.test.ts
+│   │   ├── upcoming.ts            # Generates "upcoming match" visuals
+│   │   ├── upcoming.test.ts
+│   │   ├── results.ts             # Generates "results" visuals
+│   │   ├── results.test.ts
+│   │   └── index.ts               # Generator entry point
 │   ├── matches/
-│   │   ├── categories.ts      # Match category definitions (seniors, jeunes, competlib)
-│   │   └── competitionLabels.ts # Human-readable competition name mapping
+│   │   ├── categories.ts          # Match category definitions
+│   │   ├── categories.test.ts
+│   │   ├── competitionLabels.ts   # Human-readable competition name mapping
+│   │   ├── competitionLabels.test.ts
+│   │   ├── groupMatches.ts        # Groups upcoming matches by competition/date
+│   │   └── groupMatches.test.ts
 │   ├── scraper/
-│   │   └── scraper.ts         # FFVB scraper (axios + cheerio)
-│   ├── config.ts              # Club ID & base URL config
-│   └── index.ts               # Main entry point
-├── tests/
-│   └── fixtures/
-│       └── ffvb-response.html # HTML fixture for scraper unit tests
-└── output/                    # Generated PNG files
+│   │   ├── scraper.ts             # FFVB scraper (axios + cheerio)
+│   │   ├── scraper.test.ts
+│   │   └── fixtures/
+│   │       └── ffvb-response.html # HTML fixture for scraper tests
+│   ├── config.ts                  # Club ID & base URL config
+│   └── index.ts                   # Main CLI entry point
+├── sonar-project.properties
+├── vitest.config.ts
+└── tsconfig.json
 ```
 
 ---
@@ -162,7 +174,7 @@ Visuals are composed using Sharp:
 
 ## CI/CD
 
-Pull requests to `main` are validated by the **PR Checks** workflow (`.github/workflows/pr.yaml`):
+Pull requests to `main` are validated by the **PR Checks** workflow (`.github/workflows/pr-check.yaml`):
 
 - ✅ Lint (ESLint)
 - ✅ Format check (Prettier)
