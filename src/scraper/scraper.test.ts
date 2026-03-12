@@ -2,7 +2,10 @@ import { readFileSync } from "fs";
 import { describe, it, expect } from "vitest";
 import { parseMatches, getMondayTimestamp } from "./scraper.js";
 
-const fixtureHtml = readFileSync("tests/fixtures/ffvb-response.html", "utf-8");
+const fixtureHtml = readFileSync(
+  "src/scraper/fixtures/ffvb-response.html",
+  "utf-8"
+);
 
 describe("getMondayTimestamp", () => {
   it("returns a timestamp corresponding to a Monday", () => {
