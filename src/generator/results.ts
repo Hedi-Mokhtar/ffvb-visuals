@@ -3,7 +3,14 @@ import path from "node:path";
 import type { Match } from "../scraper/scraper.js";
 import type { Category } from "../matches/categories.js";
 import { getCompetitionLabel } from "../matches/competitionLabels.js";
-import { WIDTH, HEIGHT, ASSETS_DIR, OUTPUT_DIR, isSJL } from "./helpers.js";
+import {
+  WIDTH,
+  HEIGHT,
+  ASSETS_DIR,
+  OUTPUT_DIR,
+  isSJL,
+  escapeXml,
+} from "./helpers.js";
 
 const CATEGORY_LABELS: Record<Category, string> = {
   seniors: "SENIORS",
@@ -84,7 +91,9 @@ export async function generateResultsVisual(
         isHome ? match.scoreExterieur : match.scoreDomicile
       );
       const hasWon = scoreSJL > scoreAdv;
-      const adversaire = isHome ? match.exterieur : match.domicile;
+      const adversaire = isHome
+        ? escapeXml(match.exterieur)
+        : escapeXml(match.domicile);
       const competition = getCompetitionLabel(match.competition);
 
       const blockY = MATCHES_START_Y + i * MATCH_BLOCK_HEIGHT;

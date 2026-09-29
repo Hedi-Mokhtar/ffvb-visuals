@@ -24,7 +24,7 @@ describe("getMondayTimestamp", () => {
   it("returns a timestamp corresponding to a Monday", () => {
     const timestamp = getMondayTimestamp(0);
     const date = new Date(timestamp * 1000);
-    expect(date.getUTCDay()).toBe(1);
+    expect(date.getDay()).toBe(1);
   });
 
   it("shifts correctly by one week with offset 1", () => {
@@ -52,7 +52,28 @@ describe("getMondayTimestamp", () => {
     vi.setSystemTime(new Date("2024-03-17T12:00:00.000Z")); // Sunday March 17, 2024
     const timestamp = getMondayTimestamp(0);
     const date = new Date(timestamp * 1000);
-    expect(date.getUTCDay()).toBe(1);
+    expect(date.getDay()).toBe(1);
+    vi.useRealTimers();
+  });
+
+  it("uses the local calendar week for the current Monday", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-29T09:30:00.000Z"));
+
+    const mondayTs = getMondayTimestamp(0);
+    const mondayDate = new Date(mondayTs * 1000);
+    const now = new Date();
+    const expectedMonday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - ((now.getDay() + 6) % 7)
+    );
+
+    expect(mondayDate.getFullYear()).toBe(expectedMonday.getFullYear());
+    expect(mondayDate.getMonth()).toBe(expectedMonday.getMonth());
+    expect(mondayDate.getDate()).toBe(expectedMonday.getDate());
+    expect(mondayDate.getDay()).toBe(1);
+
     vi.useRealTimers();
   });
 });
@@ -129,6 +150,20 @@ describe("fetchMatches", () => {
 
     expect(Array.isArray(matches)).toBe(true);
     expect(matches.length).toBeGreaterThan(0);
+  });
+
+  it("includes the season parameter in the FFVB request", async () => {
+    const fixtureBinary = readFileSync(
+      join(import.meta.dirname, "fixtures/ffvb-response.html")
+    );
+    vi.mocked(axios.get).mockResolvedValue({ data: fixtureBinary });
+
+    await fetchMatches(0);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      expect.stringContaining("saison="),
+      expect.objectContaining({ responseType: "arraybuffer" })
+    );
   });
 });
 

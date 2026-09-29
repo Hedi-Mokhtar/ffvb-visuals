@@ -1,17 +1,22 @@
 export const COMPETITION_LABELS: Record<string, string> = {
   // Séniors
   PFA: "Pré-Nationale Féminine",
+  PFC: "Pré-Nationale Féminine",
   "1FA": "Régionale 1 Féminine",
+  "1FB": "Régionale 1 Féminine",
   "1MB": "Régionale 1 Masculine",
   DMA: "Départementale 1 Masculine",
   M1F: "Coupe de France Masters Féminine",
   M1M: "Coupe de France Masters Masculine",
   // Jeunes
   CFO: "M18 Féminine",
+  CFV: "M18 Féminine",
   CMI: "M18 Masculine",
+  CMX: "M18 Masculine",
   JFE: "M21 Féminine",
   JFD: "Coupe de France M21 Féminine",
   MFL: "M15 Féminine",
+  MMZ: "M15 Minimes Masculin",
   BMI: "M13 Benjamin",
   JFG: "Coupe de france M21 Feminine",
   // Compét loisir
