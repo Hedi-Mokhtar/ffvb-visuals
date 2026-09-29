@@ -4,7 +4,9 @@ import { getCategory, groupMatchesByCategory } from "./categories.js";
 describe("getCategory", () => {
   it("identifie les compétitions séniors", () => {
     expect(getCategory("PFA - PRE-NATIONALE FEMININES")).toBe("seniors");
+    expect(getCategory("PFC - PRE-NATIONALE FEMININES")).toBe("seniors");
     expect(getCategory("M1F - COUPE DE FRANCE MASTERS")).toBe("seniors");
+    expect(getCategory("1FB - RÉGIONALE 1 FEMININES")).toBe("seniors");
     expect(getCategory("1MB - RÉGIONALE 1 MASCULINS")).toBe("seniors");
   });
 
@@ -12,6 +14,9 @@ describe("getCategory", () => {
     expect(getCategory("JFE - M21 Fém.")).toBe("jeunes");
     expect(getCategory("JFD - COUPE DE FRANCE M21")).toBe("jeunes");
     expect(getCategory("MFL - M15 MINIMES")).toBe("jeunes");
+    expect(getCategory("CFV - M18 Féminines")).toBe("jeunes");
+    expect(getCategory("CMX - M18 Masculins")).toBe("jeunes");
+    expect(getCategory("MMZ - M15 Minimes")).toBe("jeunes");
   });
 
   it("identifie les compétitions loisir", () => {

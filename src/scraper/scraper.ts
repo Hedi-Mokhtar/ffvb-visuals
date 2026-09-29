@@ -67,27 +67,24 @@ export function parseMatches(html: string): Match[] {
 
 export function getMondayTimestamp(weekOffset: number): number {
   const now = new Date();
-  const day = now.getUTCDay();
-  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const monday = new Date(now);
+  const diffToMonday = now.getDay() === 0 ? -6 : 1 - now.getDay();
 
-  const mondayUTC = new Date(
-    Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate() + diffToMonday + (weekOffset - 1) * 7,
-      23,
-      0,
-      0,
-      0
-    )
-  );
+  monday.setDate(now.getDate() + diffToMonday + weekOffset * 7);
+  monday.setHours(0, 0, 0, 0);
 
-  return Math.floor(mondayUTC.getTime() / 1000);
+  return Math.floor(monday.getTime() / 1000);
 }
 
 export async function fetchMatches(weekOffset: number): Promise<Match[]> {
   const timestamp = getMondayTimestamp(weekOffset);
-  const url = `${config.baseUrl}?aff_semaine=SUI&date_jour=${timestamp}&cnclub=${config.clubId}`;
+  const params = new URLSearchParams({
+    aff_semaine: "SUI",
+    date_jour: String(timestamp),
+    cnclub: config.clubId,
+    saison: config.saison ?? "",
+  });
+  const url = `${config.baseUrl}?${params.toString()}`;
 
   const { data } = await axios.get(url, { responseType: "arraybuffer" });
   const decoded = new TextDecoder("iso-8859-1").decode(data);
